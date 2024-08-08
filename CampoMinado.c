@@ -163,19 +163,11 @@ int checksVitory(){
 
 
 //Main function for start game
-int main(){
-    int op;
-    
-    do{
+int main(){    
         startBoard();
         sortBomb(10);
         quantBombInNei();
         printf("\n\t\tMINEFIELD\n");
         play();
-
-        printf("\nType 1 to play again\n");
-        scanf("%d", &op);
-    }while(op == 1);
-
     return 0;
 }
