@@ -122,11 +122,11 @@ void play(){
         openCell(line, column);
     }while(checksVitory() != 0 && board[line][column].isBomb == 0);
 
-    if(board[line][column].isBomb == 1){
-        printf("\n\tYou lost, this is a bomb");
-    }else if (board[line][column].isBomb == 0 && checksVitory() == 0)
-    {
+    if(board[line][column].isBomb == 0 && checksVitory == 0){
         printf("\n\tYou win!!");
+    }else if (board[line][column].isBomb == 1)
+    {
+        printf("\n\tYou lost, the position is a bomb!!");
     }
     
 }
@@ -148,18 +148,16 @@ void openCell(int l, int c){
 
 
 int checksVitory(){
-    //if quantit is != 0, so have cell that is not open and not have bomb
-    //if return 0 só all cell with not bomb is open
-    int quantit;
     for(l = 0; l < size; l++){
         for(c = 0; c < size; c++){
             if (board[l][c].isOpen == 0 && board[l][c].isBomb == 0) // if my position is not open and no have bomb
             {
-                quantit++; 
-            }            
+                return 1; // return 1 (It has a closed position and no have bomb)
+            }else{
+                return 0; //every position without a bomb is open
+            }           
         }
     }
-    return quantit;
 }
 
 
