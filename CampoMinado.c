@@ -3,9 +3,11 @@
 
 typedef struct
 {
+    
     int isBomb;
     int isOpen;
     int bombInN;
+    
 }celOfBoard; //Struc for any cell of board
 
 celOfBoard board[10][10];
@@ -13,7 +15,7 @@ int size = 10;
 int l, c;
 
 
-//Function to start the board with all cell values ​​null
+//Function to start the board with all cell values null
 void startBoard(){
     for(int line = 0; line < size; line++){
         for(int column = 0; column < size; column++){
@@ -29,13 +31,14 @@ void sortBomb(int nBombs){
     int line;
     int column;
     
+    srand(time(NULL)); //At each program start, the generated values change
     for(int i = 0; i < nBombs; i++){
-        line = rand() % 10;
-        column = rand() % 10;
+        line = rand() % size;
+        column = rand() % size;
 
         if(board[line][column].isBomb == 0){
             board[line][column].isBomb = 1;
-        }else{
+        }else if(board[line][column].isBomb == 1){
             i--; // Return i - 1 and sort a new space for bomb
         }
     }
@@ -54,16 +57,16 @@ void quantBombInNei(){
 //This function will see if each neighboring space contains a bomb and add 1 to the variable quantity of bomb
 int bombInNeibo(int l, int c){
     int quantBomb = 0;
-    if(checksPosition(l-1,c) && board[l-1][c].isBomb == 1){
+    if(checksPosition(l-1,c) == 1 && board[l-1][c].isBomb == 1){
         quantBomb++;
     }
-    if(checksPosition(l+1,c) && board[l+1][c].isBomb == 1){
+    if(checksPosition(l+1,c) == 1 && board[l+1][c].isBomb == 1){
         quantBomb++;
     }
-    if(checksPosition(l,c-1) && board[l][c-1].isBomb == 1){
+    if(checksPosition(l,c+1) == 1 && board[l][c+1].isBomb == 1){
         quantBomb++;
     }
-    if(checksPosition(l,c+1) && board[l][c+1].isBomb == 1){
+    if(checksPosition(l,c-1) == 1 && board[l][c-1].isBomb == 1){
         quantBomb++;
     }
     return quantBomb;
@@ -81,10 +84,8 @@ int checksPosition(int l, int c){
 //Print board
 void printBoard(){
     printf("\n\n\t ");
-    for(l = 0; l < size; l++){
-        printf("%d    ", l);
-    }
-    printf("\n\t ---------------------------------------------\n");
+    printf("\n\n\t     0   1   2   3   4   5   6   7   8   9");
+    printf("\n\t   -----------------------------------------\n");
     for(l = 0; l < size; l++){
         printf("\t   |");
         for(c = 0; c < size; c++){
@@ -99,7 +100,7 @@ void printBoard(){
                 printf("   ");
             }printf("|");
         }
-        printf("\n\t ---------------------------------------------\n");
+        printf("\n\t   -----------------------------------------\n");
     }
 }
 
@@ -119,45 +120,47 @@ void openCell(int l, int c){
     }
 }
 
+
 //This is function play
 void play(){
     int line, column;
-    do{
-        printBoard(); // Print the board with function
-        do
-        {
-            printf("Enter the row and column: ");
-            scanf("%d%d", &line, &column);
-
-            if(checksPosition(line, column) == 0 || board[line][column].isOpen == 1){
-                printf("\nInvalid coordinate, enter again!");
-            }
-        }while(checksPosition(line, column) == 0 || board[line][column].isOpen == 1); //Ask for the line and column while
-        // the position is not valid or is already open
-        //call function to open a cell
-        openCell(line, column);
-    }while(checksVitory() != 0 && board[line][column].isBomb == 0);
-
-    if(board[line][column].isBomb == 0 && checksVitory() == 0){
-        printBoard();
-        printf("\n\tYou win!!");
-    }else if (board[line][column].isBomb == 1)
-    {
-        printBoard();
-        printf("\n\tYou lost, the position is a bomb!!");
-    }
     
+    while(1){
+        printBoard();
+        do{
+            printf("Enter a row and a column: ");
+            scanf("%d%d", &line, &column);
+        
+            if(checksPosition(line, column) == 0 || board[line][column].isOpen == 1){
+                printf("\nPosition invalid, try again!\n");
+            }
+        }while(checksPosition(line, column) == 0 || board[line][column].isOpen == 1);
+        
+        openCell(line,column);
+        
+        if(checksVitory() == 1 && board[line][column].isBomb == 0){
+            printBoard();
+            printf("\n\tYou win!!");
+            break;
+        }else if(board[line][column].isBomb == 1){
+            printBoard();
+            printf("\n\tYou lost, the position is a bomb!!");
+            break;
+        }else{
+            continue;
+        }
+    }
 }
 
 
 int checksVitory(){
     for(l = 0; l < size; l++){
         for(c = 0; c < size; c++){
-            if (board[l][c].isOpen == 0 && board[l][c].isBomb == 0) // if my position is not open and no have bomb
+            if (board[l][c].isOpen == 0 && board[l][c].isBomb == 0) // if position is not open and no have bomb
             {
-                return 1; // return 1 (It has a closed position and no have bomb)
+                return 0; // return 0 (It has a closed position and no have bomb)
             }else{
-                return 0; //every position without a bomb is open
+                return 1; //every position without a bomb is open
             }           
         }
     }
