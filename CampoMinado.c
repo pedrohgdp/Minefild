@@ -103,33 +103,6 @@ void printBoard(){
     }
 }
 
-//This is function play
-void play(){
-    int line, column;
-    do{
-        printBoard(); // Print the board with function
-        do
-        {
-            printf("Enter the row and column: ");
-            scanf("%d%d", &line, &column);
-
-            if(checksPosition(line, column) == 0 || board[line][column].isOpen == 1){
-                printf("\nInvalid coordinate, enter again!");
-            }
-        }while(verificPosition(line, column) == 0 || board[line][column].isOpen == 1); //Ask for the line and column while
-        // the position is not valid or is already open
-        //call function to open a cell
-        openCell(line, column);
-    }while(checksVitory() != 0 && board[line][column].isBomb == 0);
-
-    if(board[line][column].isBomb == 0 && checksVitory == 0){
-        printf("\n\tYou win!!");
-    }else if (board[line][column].isBomb == 1)
-    {
-        printf("\n\tYou lost, the position is a bomb!!");
-    }
-    
-}
 
 void openCell(int l, int c){
     //Checks if position is valid and is not open
@@ -144,6 +117,36 @@ void openCell(int l, int c){
             openCell(l, c+1);
         }
     }
+}
+
+//This is function play
+void play(){
+    int line, column;
+    do{
+        printBoard(); // Print the board with function
+        do
+        {
+            printf("Enter the row and column: ");
+            scanf("%d%d", &line, &column);
+
+            if(checksPosition(line, column) == 0 || board[line][column].isOpen == 1){
+                printf("\nInvalid coordinate, enter again!");
+            }
+        }while(checksPosition(line, column) == 0 || board[line][column].isOpen == 1); //Ask for the line and column while
+        // the position is not valid or is already open
+        //call function to open a cell
+        openCell(line, column);
+    }while(checksVitory() != 0 && board[line][column].isBomb == 0);
+
+    if(board[line][column].isBomb == 0 && checksVitory() == 0){
+        printBoard();
+        printf("\n\tYou win!!");
+    }else if (board[line][column].isBomb == 1)
+    {
+        printBoard();
+        printf("\n\tYou lost, the position is a bomb!!");
+    }
+    
 }
 
 
